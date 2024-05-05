@@ -124,11 +124,15 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
         )
 
         res_str = response.choices[0].message.content
-        res_dict = json.loads(res_str)
+
+        try:
+            res_dict = json.loads(res_str)
+        except ValueError:
+            res_dict = {}
 
         data = {
             "design_feature": res_dict.get("design_feature", ""),
-            "design_type": res_dict.get("disign_type", ""),
+            "design_type": res_dict.get("design_type", ""),
             "logo": res_dict.get("logo", ""),
             "icon": res_dict.get("icon", ""),
             "person": res_dict.get("person", ""),
