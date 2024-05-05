@@ -86,7 +86,7 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
     input_values = req_body.get('values', [])
     output_values = []
 
-    for input_value in input_values:
+    for input_value in input_values:      
         image_path = input_value["data"]["image_path"]
 
         messages = [
@@ -123,11 +123,21 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
             n=1
         )
 
-        answer = response.choices[0].message.content
+        res_str = response.choices[0].message.content
+        res_dict = json.loads(res_str)
+
+        data = {
+            "design_feature": res_dict.get("design_feature", ""),
+            "design_type": res_dict.get("disign_type", ""),
+            "logo": res_dict.get("logo", ""),
+            "icon": res_dict.get("icon", ""),
+            "person": res_dict.get("person", ""),
+            "color": res_dict.get("color", "")
+        }
 
         output_value = {}
         output_value["recordId"] = input_value["recordId"]
-        output_value["data"] = answer
+        output_value["data"] = data
         output_value["errors"] = []
         output_value["warnings"] = []
         output_values.append(output_value)
